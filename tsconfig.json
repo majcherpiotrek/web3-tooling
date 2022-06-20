@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "noImplicitAny": true,
+        "module": "es6",
+        "target": "es5",
+        "jsx": "react",
+        "allowJs": true,
+        "declaration": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "lib": ["DOM", "ES5", "ES2015", "ES2015.Promise"]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist", "src/**/*.test.tsx", "src/**/*.test.ts"]
+}
