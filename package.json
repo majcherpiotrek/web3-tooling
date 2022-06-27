@@ -1,6 +1,6 @@
 {
     "name": "web3-tooling",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "",
     "homepage": "",
     "bugs": {
@@ -11,6 +11,9 @@
     "main": "dist/index.js",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
+    "exports": {
+        "./package.json": "./package.json"
+    },
     "scripts": {
         "clean": "rimraf dist",
         "build": "rollup -c && tsc",
@@ -34,6 +37,7 @@
     "devDependencies": {
         "@metamask/detect-provider": "^1.2.0",
         "@metamask/providers": "^9.0.0",
+        "@rollup/plugin-node-resolve": "^13.3.0",
         "@rollup/plugin-typescript": "^8.3.3",
         "@types/big.js": "^6.1.3",
         "@types/jest": "^28.1.2",
