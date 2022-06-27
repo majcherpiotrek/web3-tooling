@@ -1,6 +1,6 @@
 {
     "name": "web3-tooling",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "description": "",
     "homepage": "",
     "bugs": {
@@ -85,7 +85,6 @@
         "big.js": "^6.2.0",
         "ramda": "^0.28.0",
         "true-myth": "^4.1.1",
-        "tslib": "^2.4.0",
         "web3": "^1.7.3"
     }
 }
