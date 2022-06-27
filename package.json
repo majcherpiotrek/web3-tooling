@@ -1,6 +1,6 @@
 {
     "name": "web3-tooling",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "",
     "homepage": "",
     "bugs": {
@@ -8,7 +8,7 @@
         "email": "majcherpiotr.dev@gmail.com"
     },
     "type": "module",
-    "main": "dist/index-commonjs.js",
+    "main": "dist/index.js",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
