@@ -1,6 +1,6 @@
 {
     "name": "web3-tooling",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "",
     "homepage": "",
     "bugs": {
@@ -32,8 +32,6 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "@metamask/detect-provider": "^1.2.0",
-        "@metamask/providers": "^9.0.0",
         "@rollup/plugin-auto-install": "^2.2.0",
         "@rollup/plugin-node-resolve": "^13.3.0",
         "@rollup/plugin-typescript": "^8.3.3",
@@ -42,7 +40,6 @@
         "@types/ramda": "^0.28.14",
         "@typescript-eslint/eslint-plugin": "^5.28.0",
         "@typescript-eslint/parser": "5.28.0",
-        "big.js": "^6.2.0",
         "cz-conventional-changelog": "3.3.0",
         "eslint": "^8.18.0",
         "eslint-config-prettier": "^8.5.0",
@@ -56,14 +53,11 @@
         "husky": "^8.0.1",
         "jest": "^28.1.1",
         "prettier": "^2.7.1",
-        "ramda": "^0.28.0",
         "rimraf": "^3.0.2",
         "rollup": "^2.75.6",
-        "true-myth": "^4.1.1",
         "ts-jest": "^28.0.5",
         "ts-loader": "^9.3.0",
         "typescript": "^4.7.4",
-        "web3": "^1.7.3",
         "webpack": "^5.73.0",
         "webpack-cli": "^4.10.0"
     },
@@ -87,6 +81,11 @@
         "CHANGELOG.md"
     ],
     "dependencies": {
-        "tslib": "^2.4.0"
+        "@metamask/detect-provider": "^1.2.0",
+        "big.js": "^6.2.0",
+        "ramda": "^0.28.0",
+        "true-myth": "^4.1.1",
+        "tslib": "^2.4.0",
+        "web3": "^1.7.3"
     }
 }
