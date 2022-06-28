@@ -1,9 +1,10 @@
-export interface SampleInterface {
-    sampleFunction: () => void;
-}
+export { Chains, Chain, ChainId, MainChain, MainChainId, TestChain, TestChainId } from "./chains.js";
+export {
+    EthereumProvider,
+    EthereumProviderBase,
+    EthereumMethod,
+    EthereumEvent,
+    RequestArguments,
+} from "./ethereum.types.js";
 
-export const implementation: SampleInterface = {
-    sampleFunction: () => {
-        console.log("samle function");
-    },
-};
+export { WalletConnector } from "./WalletConnector.js";

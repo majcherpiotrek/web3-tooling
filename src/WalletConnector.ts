@@ -7,6 +7,7 @@ import Web3 from "web3";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { IWalletConnectProviderOptions } from "@walletconnect/types";
+import { Web3Errors } from "./web3.errors";
 
 const handleRequestError = (requestMethod: EthereumMethod, err: unknown) =>
     isEthereumProviderError(err) ? handleEthereumProviderError(requestMethod, err) : Errors.UnknownError(err);
@@ -37,10 +38,16 @@ interface WalletCallbacks {
     onAccountDisconnected?: (reason?: Error) => void;
 }
 
-export interface WalletConnectedResponse {
+interface BrowserWalletConnectedResponse {
+    ethProvider: EthereumProvider;
     web3: Web3;
     account: string;
     chainId: number;
+}
+
+interface MobileWalletConnectedResponse extends Omit<BrowserWalletConnectedResponse, "ethProvider"> {
+    ethProvider: WalletConnectProvider;
+    disconnect: () => Promise<void>;
 }
 
 const subscribeToWalletEvents = (callbacks: WalletCallbacks, provider: EthereumProvider) => {
@@ -58,20 +65,19 @@ const subscribeToWalletEvents = (callbacks: WalletCallbacks, provider: EthereumP
             Err: onDisconnected,
         }),
     );
-    // TODO dive deep into this event
+
     provider.on("disconnect", (code: number, reason: string) => {
-        console.log("disconnected", `Code: ${code}, reason: ${reason}`);
-        onDisconnected();
+        onDisconnected(Web3Errors.MobileWalletDisconnected(code, reason));
     });
 };
 
-interface WalletLinkConfig extends IWalletConnectProviderOptions, WalletCallbacks {}
+interface WalletConnectConfig extends IWalletConnectProviderOptions, WalletCallbacks {}
 
 export const WalletConnector = {
-    browser: async (config?: WalletCallbacks): Promise<WalletConnectedResponse> => {
+    browser: async (config?: WalletCallbacks): Promise<BrowserWalletConnectedResponse> => {
         const ethProvider: EthereumProvider | null = (await detectEthereumProvider()) as EthereumProvider | null;
 
-        const connectWallet = async (provider: EthereumProvider): Promise<WalletConnectedResponse> => {
+        const connectWallet = async (provider: EthereumProvider): Promise<BrowserWalletConnectedResponse> => {
             const accountResult = await requestWalletAccount(provider);
             const chainIdResult = await getWalletChainId(provider);
             return accountResult
@@ -79,7 +85,12 @@ export const WalletConnector = {
                 .match({
                     Ok: ({ account, chainId }) => {
                         config && subscribeToWalletEvents(config, provider);
-                        return Promise.resolve({ web3: new Web3(provider as any), account, chainId });
+                        return Promise.resolve({
+                            web3: new Web3(provider as any),
+                            account,
+                            chainId,
+                            ethProvider: provider,
+                        });
                     },
                     Err: (err) => Promise.reject(err),
                 });
@@ -95,7 +106,7 @@ export const WalletConnector = {
                 Err: (err) => Promise.reject(err),
             });
     },
-    walletLink: async (config: WalletLinkConfig): Promise<WalletConnectedResponse> => {
+    walletLink: async (config: WalletConnectConfig): Promise<MobileWalletConnectedResponse> => {
         const provider = new WalletConnectProvider({
             qrcodeModal: QRCodeModal,
             infuraId: config.infuraId,
@@ -112,7 +123,14 @@ export const WalletConnector = {
             subscribeToWalletEvents(config, provider as unknown as EthereumProvider);
 
             return accountResult.match({
-                Ok: (account) => Promise.resolve({ web3, account, chainId: provider.chainId }),
+                Ok: (account) =>
+                    Promise.resolve({
+                        web3,
+                        account,
+                        chainId: provider.chainId,
+                        disconnect: provider.disconnect.bind(provider),
+                        ethProvider: provider,
+                    }),
                 Err: (err) => Promise.reject(err),
             });
         } catch (e) {
