@@ -1,6 +1,6 @@
 {
     "name": "web3-tooling",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "description": "",
     "homepage": "",
     "bugs": {
@@ -37,6 +37,7 @@
         "@rollup/plugin-typescript": "^8.3.3",
         "@types/big.js": "^6.1.3",
         "@types/jest": "^28.1.2",
+        "@types/react": "^18.0.14",
         "@typescript-eslint/eslint-plugin": "^5.28.0",
         "@typescript-eslint/parser": "5.28.0",
         "cz-conventional-changelog": "3.3.0",
@@ -52,6 +53,7 @@
         "husky": "^8.0.1",
         "jest": "^28.1.1",
         "prettier": "^2.7.1",
+        "react": "^16.13.1",
         "rimraf": "^3.0.2",
         "rollup": "^2.75.6",
         "ts-jest": "^28.0.5",
