@@ -7,7 +7,8 @@ import Web3 from "web3";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { IWalletConnectProviderOptions } from "@walletconnect/types";
-import { Web3Errors } from "./web3.errors";
+import { Web3Errors } from "./web3.errors.js";
+import { WalletCallbacks, WalletConnectedContext } from "./types.js";
 
 const handleRequestError = (requestMethod: EthereumMethod, err: unknown) =>
     isEthereumProviderError(err) ? handleEthereumProviderError(requestMethod, err) : Errors.UnknownError(err);
@@ -31,24 +32,6 @@ const getWalletChainId = async (provider: EthereumProvider): Promise<Result<numb
         return Result.err(handleRequestError(method, e));
     }
 };
-
-interface WalletCallbacks {
-    onAccountChanged?: (account: string) => void;
-    onChainChanged?: (chainId: number) => void;
-    onAccountDisconnected?: (reason?: Error) => void;
-}
-
-interface BrowserWalletConnectedResponse {
-    ethProvider: EthereumProvider;
-    web3: Web3;
-    account: string;
-    chainId: number;
-}
-
-interface MobileWalletConnectedResponse extends Omit<BrowserWalletConnectedResponse, "ethProvider"> {
-    ethProvider: WalletConnectProvider;
-    disconnect: () => Promise<void>;
-}
 
 const subscribeToWalletEvents = (callbacks: WalletCallbacks, provider: EthereumProvider) => {
     const onDisconnected = (err?: Error) => callbacks.onAccountDisconnected && callbacks.onAccountDisconnected(err);
@@ -74,10 +57,10 @@ const subscribeToWalletEvents = (callbacks: WalletCallbacks, provider: EthereumP
 interface WalletConnectConfig extends IWalletConnectProviderOptions, WalletCallbacks {}
 
 export const WalletConnector = {
-    browser: async (config?: WalletCallbacks): Promise<BrowserWalletConnectedResponse> => {
+    browser: async (config?: WalletCallbacks): Promise<WalletConnectedContext> => {
         const ethProvider: EthereumProvider | null = (await detectEthereumProvider()) as EthereumProvider | null;
 
-        const connectWallet = async (provider: EthereumProvider): Promise<BrowserWalletConnectedResponse> => {
+        const connectWallet = async (provider: EthereumProvider): Promise<WalletConnectedContext> => {
             const accountResult = await requestWalletAccount(provider);
             const chainIdResult = await getWalletChainId(provider);
             return accountResult
@@ -89,7 +72,6 @@ export const WalletConnector = {
                             web3: new Web3(provider as any),
                             account,
                             chainId,
-                            ethProvider: provider,
                         });
                     },
                     Err: (err) => Promise.reject(err),
@@ -106,7 +88,7 @@ export const WalletConnector = {
                 Err: (err) => Promise.reject(err),
             });
     },
-    walletLink: async (config: WalletConnectConfig): Promise<MobileWalletConnectedResponse> => {
+    walletLink: async (config: WalletConnectConfig): Promise<WalletConnectedContext> => {
         const provider = new WalletConnectProvider({
             qrcodeModal: QRCodeModal,
             infuraId: config.infuraId,
@@ -129,12 +111,10 @@ export const WalletConnector = {
                         account,
                         chainId: provider.chainId,
                         disconnect: provider.disconnect.bind(provider),
-                        ethProvider: provider,
                     }),
                 Err: (err) => Promise.reject(err),
             });
         } catch (e) {
-            console.log("WalletConnect connection failed", e);
             return Promise.reject(e);
         }
     },

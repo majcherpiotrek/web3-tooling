@@ -8,3 +8,9 @@ export {
 } from "./ethereum.types.js";
 
 export { WalletConnector } from "./WalletConnector.js";
+export {
+    WalletConnectionProvider,
+    useWalletConnectionState,
+    useConnectBrowserWallet,
+    useWalletConnectedContext,
+} from "./WalletConnectionProvider.js";
