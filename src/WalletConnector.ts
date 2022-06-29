@@ -54,7 +54,7 @@ const subscribeToWalletEvents = (callbacks: WalletCallbacks, provider: EthereumP
     });
 };
 
-interface WalletConnectConfig extends IWalletConnectProviderOptions, WalletCallbacks {}
+export interface WalletConnectConfig extends IWalletConnectProviderOptions, WalletCallbacks {}
 
 export const WalletConnector = {
     browser: async (config?: WalletCallbacks): Promise<WalletConnectedContext> => {
@@ -68,7 +68,8 @@ export const WalletConnector = {
                 .match({
                     Ok: ({ account, chainId }) => {
                         config && subscribeToWalletEvents(config, provider);
-                        return Promise.resolve({
+                        return Promise.resolve<WalletConnectedContext>({
+                            walletType: "Browser",
                             web3: new Web3(provider as any),
                             account,
                             chainId,
@@ -88,7 +89,7 @@ export const WalletConnector = {
                 Err: (err) => Promise.reject(err),
             });
     },
-    walletLink: async (config: WalletConnectConfig): Promise<WalletConnectedContext> => {
+    walletConnect: async (config: WalletConnectConfig): Promise<WalletConnectedContext> => {
         const provider = new WalletConnectProvider({
             qrcodeModal: QRCodeModal,
             infuraId: config.infuraId,
@@ -106,7 +107,8 @@ export const WalletConnector = {
 
             return accountResult.match({
                 Ok: (account) =>
-                    Promise.resolve({
+                    Promise.resolve<WalletConnectedContext>({
+                        walletType: "WalletConnect",
                         web3,
                         account,
                         chainId: provider.chainId,

@@ -21,3 +21,6 @@ export const parseEthereumChainId = (chainId: string | number): Result<number, W
 
 export const parseAccountsResponse = (accounts: string[]): Result<string, Web3Error> =>
     Maybe.first(accounts).toOkOrErr(Web3Errors.EmptyAccountsListError);
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const noop = () => {};

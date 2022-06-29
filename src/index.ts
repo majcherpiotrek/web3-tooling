@@ -13,4 +13,5 @@ export {
     useWalletConnectionState,
     useConnectBrowserWallet,
     useWalletConnectedContext,
+    useConnectWithWalletConnect,
 } from "./WalletConnectionProvider.js";
