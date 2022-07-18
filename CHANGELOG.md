@@ -1,3 +1,4 @@
 ## [0.0.1]
 
--   Initial version
+- Connecting a browser wallet
+- Connecting using a WalletConnect provider
