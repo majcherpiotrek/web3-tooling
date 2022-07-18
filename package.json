@@ -1,6 +1,6 @@
 {
-    "name": "web3-tooling",
-    "version": "0.0.27",
+    "name": "sb-web3-tooling",
+    "version": "0.0.1",
     "description": "",
     "homepage": "",
     "bugs": {
@@ -15,7 +15,7 @@
         "clean": "rimraf dist",
         "build": "rollup -c && tsc",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "test-ci": "jest --ci",
+        "test-ci": "jest --ci --passWithNoTests",
         "test": "jest --debug --watch",
         "test-once": "jest",
         "commit": "git-cz"
